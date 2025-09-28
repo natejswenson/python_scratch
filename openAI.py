@@ -3,7 +3,7 @@ from decouple import config
 import bard
 
 # Get the API key.
-api_key = "YOUR_API_KEY"
+api_key = config('open_ai_pat')
 
 # Create a Bard client.
 client = bard.BardClient(api_key)

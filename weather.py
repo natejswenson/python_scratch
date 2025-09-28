@@ -67,5 +67,16 @@ def get_public_ip():
 
 
 
-zipcode=get_zipcode()
-get_temp_based_on_ip(zipcode)
+def main():
+    """Main function to get weather based on current IP location."""
+    try:
+        zipcode = get_zipcode()
+        if zipcode:
+            get_temp_based_on_ip(zipcode)
+        else:
+            print("Unable to determine location from IP address.")
+    except Exception as e:
+        print(f"An error occurred while getting weather data: {e}")
+
+if __name__ == "__main__":
+    main()

@@ -23,10 +23,16 @@ A collection of Python utility scripts for various API integrations and automati
 
 2. Install dependencies:
    ```bash
-   pip install requests python-decouple roku pysmartthings garminconnect aiohttp pwinput readchar
+   pip install -r requirements.txt
    ```
 
-3. Create a `.env` file with the following variables:
+3. Copy the example environment file and configure it:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your actual API keys
+   ```
+
+   Required variables in `.env`:
    ```
    github_pat=your_github_personal_access_token
    weather_pat=your_weatherstack_api_key

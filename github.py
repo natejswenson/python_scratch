@@ -1,13 +1,14 @@
 ####################
 #imports
 ####################
-import reuse_requests 
+from utils import reuse_requests
 import sys
 import csv
+from decouple import config
 ####################
 #global_variables
 ####################
-gh_pat='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'
+gh_pat = config('github_pat')
 headers = {
     'Authorization': f'Token {gh_pat}',
     'Accept': 'application/vnd.github.v3+json'

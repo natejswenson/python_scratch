@@ -1,9 +1,11 @@
 #imports
 from roku import Roku
+from decouple import config
 import re
 
 #set roku ip address
-roku=Roku('192.168.0.8')
+roku_ip = config('roku_ip', default='192.168.0.8')
+roku = Roku(roku_ip)
 
 #home method
 def rokuHome():

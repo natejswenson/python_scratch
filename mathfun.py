@@ -1,22 +1,27 @@
+"""Basic mathematical utility functions."""
 import math
-# Add function
-# Add x and y 
-#ADD FUNCION
+from typing import Union
 
-def add(x,y):
-    a_array= [x,y]
-    anwswer=sum(a_array)
-    print(anwswer)
-    
-def subtract(x,y):
-    anwswer=x-y
-    print(anwswer)
-  
+Number = Union[int, float]
 
-    
+def add(x: Number, y: Number) -> Number:
+    """Add two numbers and return the result."""
+    result = x + y
+    print(f"{x} + {y} = {result}")
+    return result
+
+def subtract(x: Number, y: Number) -> Number:
+    """Subtract y from x and return the result."""
+    result = x - y
+    print(f"{x} - {y} = {result}")
+    return result
+
+def main() -> None:
+    """Main function to demonstrate the math functions."""
+    add(99, 1)
+    add(200, 300)
+    add(5, 1)
+    subtract(10, 5)
+
 if __name__ == "__main__":
-    add(99,1)
-    add(200,300)         #
-    add(5,1)
-    #fish=funcion
-    #pie in the face=splatter face
+    main()
