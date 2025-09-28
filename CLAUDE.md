@@ -60,18 +60,38 @@ The Garmin script includes an interactive menu system for testing different API 
 
 ## Dependencies
 
-Scripts use various external libraries:
+All dependencies are managed via `requirements.txt`. Install with:
+```bash
+pip install -r requirements.txt
+```
+
+Key libraries:
 - `requests` - HTTP client
-- `decouple` - Environment variable management
+- `python-decouple` - Environment variable management
 - `roku` - Roku device control
 - `pysmartthings` - SmartThings API
 - `garminconnect` - Garmin Connect API
 - `aiohttp` - Async HTTP client (SmartThings)
-- `pwinput`, `readchar` - User input handling (Garmin)
+- `PyGithub` - GitHub API client
+
+## Project Structure
+
+```
+python_fun/
+├── utils/           # Shared utility modules
+│   ├── __init__.py
+│   ├── reuse_requests.py  # Custom requests wrapper
+│   └── logger.py    # Logging utilities
+├── garmin/         # Garmin Connect scripts
+├── github/         # GitHub-related scripts
+├── .env.example    # Environment template
+└── requirements.txt # Dependencies
+```
 
 ## Development Notes
 
-- No formal testing framework is configured
-- Scripts are designed for personal automation and experimentation
-- API tokens and sensitive data are properly externalized to `.env`
-- The repository follows a flat structure with domain-specific subdirectories (garmin/, github/)
+- All secrets and API keys are externalized to `.env` file
+- Use `.env.example` as a template for configuration
+- Shared utilities are organized in the `utils/` directory
+- Scripts include proper error handling and type hints where applicable
+- No formal testing framework is configured (consider adding pytest for future development)

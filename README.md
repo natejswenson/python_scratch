@@ -41,6 +41,7 @@ A collection of Python utility scripts for various API integrations and automati
    ip_url=https://ipinfo.io
    smart_things_pat=your_smartthings_api_token
    open_ai_pat=your_openai_api_key
+   roku_ip=192.168.0.8  # Optional: your Roku device IP
    ```
 
 ## Usage

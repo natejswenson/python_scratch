@@ -50,3 +50,6 @@ garmin/session.json
 *.json
 !requirements.txt
 !package.json
+
+# Claude Code files
+CLAUDE.md
