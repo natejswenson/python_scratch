@@ -87,6 +87,10 @@ def test_response_parsing():
     """Test response parsing."""
     print("\nTesting response parsing...")
 
+    # Clear cache before testing
+    from swapi import _cache
+    _cache.clear()
+
     with patch('swapi.requests.get') as mock_get:
         # Test single resource
         mock_get.return_value.status_code = 200
@@ -126,43 +130,59 @@ def test_error_handling():
     """Test error handling."""
     print("\nTesting error handling...")
 
+    # Clear cache before testing
+    from swapi import _cache
+    _cache.clear()
+
+    # Create mock exception classes
+    class MockHTTPError(Exception):
+        pass
+
+    class MockTimeout(Exception):
+        pass
+
     with patch('swapi.requests.get') as mock_get:
-        # Test 404
-        from requests.exceptions import HTTPError
-        mock_get.return_value.status_code = 404
-        mock_get.return_value.raise_for_status.side_effect = HTTPError("Not found")
+        # Patch the exception classes
+        with patch('swapi.requests.exceptions.HTTPError', MockHTTPError):
+            with patch('swapi.requests.exceptions.Timeout', MockTimeout):
+                # Test 404
+                mock_get.return_value.status_code = 404
+                mock_get.return_value.raise_for_status.side_effect = MockHTTPError("Not found")
 
-        try:
-            get_swapi_data(SWAPIResource.PEOPLE, resource_id=9999)
-            print("  ✗ FAIL: Should raise SWAPIError for 404")
-            return False
-        except SWAPIError as e:
-            if "Resource not found" in str(e):
-                print("  ✓ PASS: Handles 404 correctly")
-            else:
-                print(f"  ✗ FAIL: Wrong 404 error: {e}")
-                return False
+                try:
+                    get_swapi_data(SWAPIResource.PEOPLE, resource_id=9999)
+                    print("  ✗ FAIL: Should raise SWAPIError for 404")
+                    return False
+                except SWAPIError as e:
+                    if "Resource not found" in str(e):
+                        print("  ✓ PASS: Handles 404 correctly")
+                    else:
+                        print(f"  ✗ FAIL: Wrong 404 error: {e}")
+                        return False
 
-        # Test timeout
-        from requests.exceptions import Timeout
-        mock_get.side_effect = Timeout("Timeout")
+                # Test timeout
+                mock_get.side_effect = MockTimeout("Timeout")
 
-        try:
-            get_swapi_data(SWAPIResource.PEOPLE, resource_id=1)
-            print("  ✗ FAIL: Should raise SWAPIError for timeout")
-            return False
-        except SWAPIError as e:
-            if "timeout" in str(e).lower():
-                print("  ✓ PASS: Handles timeout correctly")
-            else:
-                print(f"  ✗ FAIL: Wrong timeout error: {e}")
-                return False
+                try:
+                    get_swapi_data(SWAPIResource.PEOPLE, resource_id=1)
+                    print("  ✗ FAIL: Should raise SWAPIError for timeout")
+                    return False
+                except SWAPIError as e:
+                    if "timeout" in str(e).lower():
+                        print("  ✓ PASS: Handles timeout correctly")
+                    else:
+                        print(f"  ✗ FAIL: Wrong timeout error: {e}")
+                        return False
 
     return True
 
 def test_caching():
     """Test caching functionality."""
     print("\nTesting caching...")
+
+    # Clear cache before testing
+    from swapi import _cache
+    _cache.clear()
 
     with patch('swapi.requests.get') as mock_get:
         mock_get.return_value.status_code = 200
@@ -196,6 +216,10 @@ def test_timeout_config():
     """Test timeout configuration."""
     print("\nTesting timeout configuration...")
 
+    # Clear cache before testing
+    from swapi import _cache
+    _cache.clear()
+
     with patch('swapi.requests.get') as mock_get:
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = {"name": "Luke"}
@@ -203,20 +227,29 @@ def test_timeout_config():
         # Test custom timeout
         get_swapi_data(SWAPIResource.PEOPLE, resource_id=1, timeout=5)
 
-        if mock_get.call_args[1]['timeout'] == 5:
+        if mock_get.call_args and mock_get.call_args.kwargs.get('timeout') == 5:
             print("  ✓ PASS: Custom timeout used")
+        elif mock_get.call_args:
+            print(f"  ✗ FAIL: Wrong timeout: {mock_get.call_args}")
+            return False
         else:
-            print(f"  ✗ FAIL: Wrong timeout: {mock_get.call_args[1]['timeout']}")
+            print("  ✗ FAIL: mock_get was not called")
             return False
 
         # Test default timeout
         mock_get.reset_mock()
-        get_swapi_data(SWAPIResource.PEOPLE, resource_id=1)
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {"name": "Leia"}
+        # Use different ID to avoid cache
+        get_swapi_data(SWAPIResource.PEOPLE, resource_id=2)
 
-        if mock_get.call_args[1]['timeout'] == 10:
+        if mock_get.call_args and mock_get.call_args.kwargs.get('timeout') == 10:
             print("  ✓ PASS: Default timeout used (10)")
+        elif mock_get.call_args:
+            print(f"  ✗ FAIL: Wrong default timeout: {mock_get.call_args}")
+            return False
         else:
-            print(f"  ✗ FAIL: Wrong default timeout: {mock_get.call_args[1]['timeout']}")
+            print("  ✗ FAIL: mock_get was not called")
             return False
 
     return True
