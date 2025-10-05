@@ -1,0 +1,47 @@
+# Coverage.py configuration file
+
+[run]
+source = .
+omit =
+    tests/*
+    .venv/*
+    venv/*
+    */site-packages/*
+    setup.py
+    */tests/*
+    */__pycache__/*
+    */migrations/*
+
+[report]
+precision = 2
+show_missing = True
+skip_covered = False
+
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code
+    def __repr__
+
+    # Don't complain if tests don't hit defensive assertion code
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run
+    if 0:
+    if False:
+    if __name__ == .__main__.:
+
+    # Don't complain about type checking blocks
+    if TYPE_CHECKING:
+
+    # Don't complain about abstract methods
+    @abstractmethod
+    @abc.abstractmethod
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml

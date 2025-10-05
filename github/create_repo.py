@@ -1,10 +1,11 @@
 from github import Github
-import os
-github_token = os.environ.get("GITHUB_TOKEN")  # Get from environment variable
+from decouple import config
 
-if not github_token:
-  print("Error: GITHUB_TOKEN environment variable not set.")
-  exit(1)
+try:
+    github_token = config('github_pat')
+except Exception as e:
+    print("Error: github_pat not found in .env file.")
+    exit(1)
 
 def create_github_repo(repo_name, description, is_private, github_token):
 
