@@ -24,6 +24,7 @@ python_fun/
 ├── swensonRoku.py          # Roku device control and app launching
 ├── getips.py               # Network discovery for Roku devices (SSDP)
 ├── openAI.py               # OpenAI API integration
+├── swapi.py                # Star Wars API (SWAPI) integration
 ├── mathfun.py              # Basic mathematical utility functions
 ├── github/
 │   ├── __init__.py
@@ -34,7 +35,11 @@ python_fun/
 │   ├── __init__.py
 │   ├── reuse_requests.py   # Custom requests wrapper with session management
 │   └── logger.py           # Logging utilities
-├── tests/                  # Comprehensive unit tests (71+ tests)
+├── specs/                  # Feature specifications for TDD
+│   └── swapi_function_spec.md
+├── tests/                  # Comprehensive unit tests (100+ tests)
+│   ├── test_swapi.py       # SWAPI function tests
+│   └── ...                 # Other test files
 ├── requirements.txt        # Production dependencies (pinned versions)
 ├── requirements-dev.txt    # Development dependencies (testing, linting)
 ├── pytest.ini              # Pytest configuration
@@ -141,6 +146,32 @@ python garmin/garmin.py
 ### GitHub Repository Creation
 ```bash
 python -c "from github.create_repo import create_github_repo; create_github_repo('my-repo', 'Description', False, 'token')"
+```
+
+### Star Wars API (SWAPI) Integration
+```python
+from swapi import get_swapi_data, SWAPIResource
+
+# Get a specific character
+luke = get_swapi_data(SWAPIResource.PEOPLE, resource_id=1)
+print(f"{luke['name']} is {luke['height']}cm tall")
+# Output: Luke Skywalker is 172cm tall
+
+# Search for planets
+desert_planets = get_swapi_data(SWAPIResource.PLANETS, search="desert")
+for planet in desert_planets:
+    print(f"{planet['name']} - {planet['climate']}")
+
+# Get all Star Wars films
+films = get_swapi_data(SWAPIResource.FILMS)
+print(f"Found {len(films)} films")
+
+# Use caching for better performance
+cached_data = get_swapi_data(
+    SWAPIResource.STARSHIPS,
+    resource_id=9,
+    use_cache=True
+)
 ```
 
 ## 🧪 Testing
